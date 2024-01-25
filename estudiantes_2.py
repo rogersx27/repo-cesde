@@ -28,6 +28,10 @@ while True:
         student_name = input("Ingrese el nombre del estudiante: ")
         tuition_value = float(input("Ingrese el valor de la matrícula: "))
         status = int(input(f"Ingrese el estrato del estudiante {student_name}: "))
+        
+        if status < 1 or status > 6:
+            print("Estrato inválido.")
+            continue
 
         total_discount = (tuition_value * (values[status]["discount"]))
         total_recharge = (tuition_value * (values[status]["recharge"]))
