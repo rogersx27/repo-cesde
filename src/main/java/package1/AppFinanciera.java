@@ -48,7 +48,7 @@ public class AppFinanciera {
             }
         } while (opcion != 0); // <- Repite el menú hasta que el usuario elija salir
 
-        scanner.close();
+        scanner.close(); // <- Cerramos la instancia del scanner 
     }
 
     // Función para calcular el tiempo necesario para duplicar el capital
