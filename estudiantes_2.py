@@ -3,7 +3,7 @@ students = []
 
 
 values = {
-    1: { "discount": 0.4, "recharge": 0},
+    1: {"discount": 0.4, "recharge": 0},
     2: {"discount": 0.3, "recharge": 0},
     3: {"discount": 0.1, "recharge": 0},
     4: {"discount": 0, "recharge": 0.1},
