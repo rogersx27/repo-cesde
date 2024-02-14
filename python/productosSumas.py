@@ -1,4 +1,5 @@
 import random
+
 import pandas as pd
 
 
@@ -34,7 +35,6 @@ def total_ventas(lista_productos):
 
 
 def crear_producto():
-
     nombres_productos = [
         "Camiseta",
         "Pantalón",
@@ -91,5 +91,5 @@ if __name__ == "__main__":
 
     Subtotal de ventas = {totalVentas}
     """
-    
+
     )
