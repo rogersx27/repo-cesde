@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="954427dd-d4b8-4610-8c76-579a636109f4" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/python/AgenciaViajes/seeder.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/AgenciaViajes/database_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/AgenciaViajes/database_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/AgenciaViajes/db/AgenciaViajes.db" beforeDir="false" afterPath="$PROJECT_DIR$/python/AgenciaViajes/db/AgenciaViajes.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/AgenciaViajes/ejrc_AgenciaViajes.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/AgenciaViajes/ejrc_AgenciaViajes.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +62,7 @@
       <recent name="C:\Users\PERSONAL\Desktop\Code_Projects\python-delete\cesde-env\python" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.seeder">
+  <component name="RunManager" selected="Python.ejrc_AgenciaViajes">
     <configuration name="ejrc_AgenciaViajes" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="cesde-env" />
       <option name="ENV_FILES" value="" />
@@ -112,8 +109,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.seeder" />
         <item itemvalue="Python.ejrc_AgenciaViajes" />
+        <item itemvalue="Python.seeder" />
       </list>
     </recent_temporary>
   </component>
