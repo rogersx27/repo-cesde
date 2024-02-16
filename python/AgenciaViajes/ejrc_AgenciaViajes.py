@@ -4,7 +4,7 @@ from time import sleep
 from database_manager import DatabaseManager
 
 # Inicializar la base de datos
-database = r"./db/AgenciaViajes.db"
+database = r"python/AgenciaViajes/db/AgenciaViajes.db"
 db_manager = DatabaseManager(database)
 
 
@@ -78,7 +78,7 @@ def menu():
         ----------------------------
         """)
 
-        menu = int(input())
+        menu = int(input("||==>"))
 
         if menu == 1:
             consult_all_data()
@@ -117,6 +117,14 @@ def menu():
                         # print(trip_id_name)
                         table_quote = [[quote['nombre'].values[0], quote['apellido'].values[0], trip_id_name, quote['nro_adultos'].values[0], quote['nro_ninos'].values[0], quote['subtotal'].values[0]]]
                         print(tabulate(table_quote, headers=["Nombre", "Apellido", "Viaje a", "Nro. adultos", "Nro. niños", "Subtotal"], tablefmt="pretty"))
+                    elif menu_admin == 3:
+                        id_quote = int(input("Ingrese el ID de la cotización que desea eliminar: "))
+                        db_manager.delete_persona_data(id_quote)
+                        print("Cotización eliminada.")
+                    elif menu_admin == 0:
+                        print("Volviendo al menú principal...")
+                        sleep(1)
+                        break
         elif menu == 0:
             print("Cerrando programa...")
             db_manager.close_connection()

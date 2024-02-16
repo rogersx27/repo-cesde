@@ -8,7 +8,7 @@ if entry.lower() != "s":
     exit()
 
 # Creamos una instancia de DatabaseManager con el nombre del archivo de la base de datos
-database = r"./db/AgenciaViajes.db"
+database = r"python/AgenciaViajes/db/AgenciaViajes.db"
 db_manager = DatabaseManager(database)
 destinos = ["Paris", "Roma", "Londres", "Nueva York", "Tokio"]
 
@@ -36,7 +36,7 @@ existing_destinations = db_manager.select_all_data_destinations()
 
 # Insertamos datos de ejemplo en la tabla Destinos si la tabla está vacía
 if existing_destinations.empty:
-    for index in range(5):
+    for _ in range(5):
         datos_destino = generar_datos_destino()
 
         if db_manager.select_data_destinations_by_name(datos_destino[0]).empty:
@@ -52,10 +52,10 @@ existing_destinations = db_manager.select_all_data_destinations() # Actualizamos
 # Verificamos si hay destinos existentes en la base de datos
 if not existing_destinations.empty:
     # Insertamos datos de ejemplo en la tabla Personas, asociados a los destinos
-    for index, destino in existing_destinations.iterrows():
-        for index in range(random.randint(1, 3)): # <- Esto es lo que está generando 11 registros, pero debería generar entre 1 y 3. No entiendo por qué.
+    for _, destino in existing_destinations.iterrows():
+        for _ in range(random.randint(1, 3)): # <- Esto es lo que está generando 11 registros, pero debería generar entre 1 y 3. No entiendo por qué.
             datos_persona = generar_datos_persona(destino['id'], destino['vlr_personaAdulta'], destino['vlr_personaMenor'])
-            print(index)
+            print(_)
             db_manager.insert_persona_data(datos_persona)
             print("Datos de personas insertados.")
 else:
