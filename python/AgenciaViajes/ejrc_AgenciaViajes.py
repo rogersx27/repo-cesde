@@ -106,16 +106,16 @@ def menu():
                     menu_admin = int(input())
                     if menu_admin == 1:
                         all_quotes = db_manager.select_all_personas_data()
-                        table_allQuotes = [[f"{all_quotes['id'].values[i]}", all_quotes['nombre'].values[i], all_quotes['apellido'].values[i], all_quotes['id_viaje'].values[i], all_quotes['nro_adultos'].values[i], all_quotes['nro_ninos'].values[i], all_quotes['subtotal'].values[i]] for i in range(len(all_quotes))]
+                        table_allQuotes = [[f"{all_quotes['id'].values[i]}", all_quotes['nombre'].values[i], all_quotes['apellido'].values[i], all_quotes['id_viaje'].values[i], all_quotes['nro_adultos'].values[i], all_quotes['nro_ninos'].values[i], all_quotes['subtotal'].values[i]] for i in range(len(all_quotes))] #<- refactorizar
                         print(tabulate(table_allQuotes, headers=["ID", "Nombre", "Apellido", "ID Viaje", "Nro. adultos", "Nro. niños", "Subtotal"], tablefmt="pretty"))
                     elif menu_admin == 2:
                         id_quote = int(input("Ingrese el ID de la cotización: "))
                         quote = db_manager.select_persona_data(id_quote)
                         # trip = db_manager.select_data_destinations(quote['id_viaje'].values[0].tolist())
-                        trip_id_name = (db_manager.select_data_destinations(quote['id_viaje'].values[0].tolist()))['destino'].values[0]
+                        trip_id_name = (db_manager.select_data_destinations(quote['id_viaje'].values[0].tolist()))['destino'].values[0] <- refactorizar 
                         # print(trip)
                         # print(trip_id_name)
-                        table_quote = [[quote['nombre'].values[0], quote['apellido'].values[0], trip_id_name, quote['nro_adultos'].values[0], quote['nro_ninos'].values[0], quote['subtotal'].values[0]]]
+                        table_quote = [[quote['nombre'].values[0], quote['apellido'].values[0], trip_id_name, quote['nro_adultos'].values[0], quote['nro_ninos'].values[0], quote['subtotal'].values[0]]] <- refactorizar 
                         print(tabulate(table_quote, headers=["Nombre", "Apellido", "Viaje a", "Nro. adultos", "Nro. niños", "Subtotal"], tablefmt="pretty"))
                     elif menu_admin == 3:
                         id_quote = int(input("Ingrese el ID de la cotización que desea eliminar: "))
