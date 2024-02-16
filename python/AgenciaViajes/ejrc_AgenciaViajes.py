@@ -11,13 +11,16 @@ db_manager = DatabaseManager(database)
 def consult_all_data():
     # Consultar todos los datos
     all_data = db_manager.select_all_data_destinations()
-    destinations = all_data['destino'].values.tolist()  # <- Obtener todos los destinos y guardarlos en una lista
+    # <- Obtener todos los destinos y guardarlos en una lista
+    destinations = all_data['destino'].values.tolist()
 
     # Crear una lista de listas con los datos formateados
-    table_allData = [[f"{i + 1}", destination] for i, destination in enumerate(destinations)]
+    table_allData = [[f"{i + 1}", destination]
+                     for i, destination in enumerate(destinations)]
 
     # Imprimir la tabla formateada
-    print(tabulate(table_allData, headers=["ID", "Destinos"], tablefmt="pretty"))
+    print(tabulate(table_allData, headers=[
+          "ID", "Destinos"], tablefmt="pretty"))
 
 
 def consult_specific_data():
@@ -27,7 +30,8 @@ def consult_specific_data():
 
     # Crear una lista de listas con los datos formateados
     table_data = [
-        [data['destino'].values[0], data['vlr_personaAdulta'].values[0], data['vlr_personaMenor'].values[0]]
+        [data['destino'].values[0], data['vlr_personaAdulta'].values[0],
+            data['vlr_personaMenor'].values[0]]
     ]
     print(tabulate(table_data, headers=["Destino", "Valor persona adulta", "Valor persona menor"],
                    tablefmt="pretty"))
@@ -41,9 +45,11 @@ def do_quote():
     children = int(input("Ingrese la cantidad de personas menores: "))
 
     data = db_manager.select_data_destinations(trip_id)  # <- Consultar un dato
-    values = [data['vlr_personaAdulta'].values[0], data['vlr_personaMenor'].values[0]]  # <- Guardamos los precios
+    values = [data['vlr_personaAdulta'].values[0],
+              data['vlr_personaMenor'].values[0]]  # <- Guardamos los precios
 
-    total = float((adults * values[0]) + (children * values[1]))  # <- Calculamos el total
+    # <- Calculamos el total
+    total = float((adults * values[0]) + (children * values[1]))
 
     table_data = [
         [data['destino'].values[0], adults, children, total]
@@ -59,7 +65,9 @@ def do_quote():
         nombre = str(input("Ingrese su nombre: "))
         apellido = str(input("Ingrese su apellido: "))
 
-        db_manager.insert_persona_data([nombre, apellido, trip_id, adults, children, total])  # <- Guardar la cotización
+        db_manager.insert_persona_data(
+            # <- Guardar la cotización
+            [nombre, apellido, trip_id, adults, children, total])
         print("Cotización guardada.")
     else:
         print("Cotización no guardada.")
@@ -99,28 +107,51 @@ def menu():
                     ----------------------------
                     1. Consultar todas las cotizaciones.
                     2. Consultar una cotización específica.
-                    3. Eliminar una cotización.
+                    3  Añadir un destino.
+                    4. Eliminar una cotización.
                     0. Salir.
                     ----------------------------
                     """)
                     menu_admin = int(input())
                     if menu_admin == 1:
                         all_quotes = db_manager.select_all_personas_data()
-                        table_allQuotes = [[f"{all_quotes['id'].values[i]}", all_quotes['nombre'].values[i], all_quotes['apellido'].values[i], all_quotes['id_viaje'].values[i], all_quotes['nro_adultos'].values[i], all_quotes['nro_ninos'].values[i], all_quotes['subtotal'].values[i]] for i in range(len(all_quotes))] # <- refactorizar
-                        print(tabulate(table_allQuotes, headers=["ID", "Nombre", "Apellido", "ID Viaje", "Nro. adultos", "Nro. niños", "Subtotal"], tablefmt="pretty"))
+                        table_allQuotes = [[f"{all_quotes['id'].values[i]}", all_quotes['nombre'].values[i], all_quotes['apellido'].values[i], all_quotes['id_viaje'].values[i],
+                                            # <- refactorizar
+                                            all_quotes['nro_adultos'].values[i], all_quotes['nro_ninos'].values[i], all_quotes['subtotal'].values[i]] for i in range(len(all_quotes))]
+                        print(tabulate(table_allQuotes, headers=[
+                              "ID", "Nombre", "Apellido", "ID Viaje", "Nro. adultos", "Nro. niños", "Subtotal"], tablefmt="pretty"))
+                        
                     elif menu_admin == 2:
-                        id_quote = int(input("Ingrese el ID de la cotización: "))
+                        id_quote = int(
+                            input("Ingrese el ID de la cotización: "))
                         quote = db_manager.select_persona_data(id_quote)
                         # trip = db_manager.select_data_destinations(quote['id_viaje'].values[0].tolist())
-                        trip_id_name = (db_manager.select_data_destinations(quote['id_viaje'].values[0].tolist()))['destino'].values[0] # <- refactorizar 
+                        trip_id_name = (db_manager.select_data_destinations(
+                            # <- refactorizar
+                            quote['id_viaje'].values[0].tolist()))['destino'].values[0]
                         # print(trip)
                         # print(trip_id_name)
-                        table_quote = [[quote['nombre'].values[0], quote['apellido'].values[0], trip_id_name, quote['nro_adultos'].values[0], quote['nro_ninos'].values[0], quote['subtotal'].values[0]]] <- refactorizar 
-                        print(tabulate(table_quote, headers=["Nombre", "Apellido", "Viaje a", "Nro. adultos", "Nro. niños", "Subtotal"], tablefmt="pretty"))
+                        table_quote = [[quote['nombre'].values[0], quote['apellido'].values[0], trip_id_name,
+                                        quote['nro_adultos'].values[0], quote['nro_ninos'].values[0], quote['subtotal'].values[0]]] < - refactorizar
+                        print(tabulate(table_quote, headers=[
+                              "Nombre", "Apellido", "Viaje a", "Nro. adultos", "Nro. niños", "Subtotal"], tablefmt="pretty"))
+                        
                     elif menu_admin == 3:
-                        id_quote = int(input("Ingrese el ID de la cotización que desea eliminar: "))
+                        destino = str(input("Ingrese el nombre del destino: "))
+                        vlr_persona_adulta = float(
+                            input("Ingrese el valor de la persona adulta: "))
+                        vlr_persona_menor = float(
+                            input("Ingrese el valor de la persona menor: "))
+                        db_manager.insert_data_destinations(
+                            [destino, vlr_persona_adulta, vlr_persona_menor])
+                        print("Destino añadido.")
+
+                    elif menu_admin == 4:
+                        id_quote = int(
+                            input("Ingrese el ID de la cotización que desea eliminar: "))
                         db_manager.delete_persona_data(id_quote)
                         print("Cotización eliminada.")
+                        
                     elif menu_admin == 0:
                         print("Volviendo al menú principal...")
                         sleep(1)
