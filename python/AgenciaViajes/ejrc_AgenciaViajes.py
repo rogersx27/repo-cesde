@@ -1,7 +1,13 @@
 from tabulate import tabulate
 from time import sleep
 
+import os
+
 from database_manager import DatabaseManager
+
+# Crea una carpeta llamada "db" en la misma ubicación que el archivo de la base de datos
+db_folder = os.path.join(os.path.dirname(__file__), "db")
+os.makedirs(db_folder, exist_ok=True)
 
 # Inicializar la base de datos
 database = r"python/AgenciaViajes/db/AgenciaViajes.db"

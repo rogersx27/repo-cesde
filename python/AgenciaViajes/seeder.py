@@ -1,11 +1,19 @@
 import random
 
 from database_manager import DatabaseManager
+import os
+
+# Crea una carpeta llamada "db" en la misma ubicación que el archivo de la base de datos
+db_folder = os.path.join(os.path.dirname(__file__), "db")
+os.makedirs(db_folder, exist_ok=True)
 
 entry = input("¿Desea generar datos de ejemplo en la base de datos? (s/n): ")
 
 if entry.lower() != "s":
     exit()
+    
+# Mueve el archivo de la base de datos a la carpeta "db"
+database = r"python/AgenciaViajes/db/AgenciaViajes.db"
 
 # Creamos una instancia de DatabaseManager con el nombre del archivo de la base de datos
 database = r"python/AgenciaViajes/db/AgenciaViajes.db"
