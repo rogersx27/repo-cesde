@@ -184,7 +184,7 @@ def menu():
                         consult_all_quotes()  # <- Consultar todos los datos de la tabla de cotizaciones
 
                     elif menu_admin == 2:
-                        consult_specific_data()  # <- Consultar un dato específico
+                        consult_specific_quote()  # <- Consultar una cotización específica
 
                     elif menu_admin == 3:
                         add_destination()  # <- Añadir un destino
