@@ -1,18 +1,19 @@
+# Librearias para la conexión a la base de datos
 import sqlite3
 from sqlite3 import Error
-
+# Librería para el manejo de datos
 import pandas as pd
 
 
 class DatabaseManager:
     def __init__(self, db_file):
         self.db_file = db_file
-        self.conn = None
-        self.create_connection()
+        self.conn = None # <- Inicializa la conexión a la base de datos al crear el objeto DatabaseManager
+        self.create_connection() # <- Llama a la función para crear la conexión a la base de datos 
 
     def create_connection(self):
         try:
-            self.conn = sqlite3.connect(self.db_file)
+            self.conn = sqlite3.connect(self.db_file) # <- Crea la conexión a la base de datos
             # Creamos las tablas al iniciar la conexión
             self.create_table_destinations()  # <- Llama a la función para crear la tabla de destinos
             self.create_table_clients()  # <- Llama a la función para crear la tabla de clientes
@@ -20,15 +21,17 @@ class DatabaseManager:
             print(e)
 
     def close_connection(self):
-        if self.conn:
-            self.conn.close()
+        if self.conn: # <- Verifica si la conexión existe
+            self.conn.close() # <- Cierra la conexión a la base de datos
 
     # Tabla de destinos #
 
-    def create_table_destinations(self):
+    def create_table_destinations(self): # <- Función para crear la tabla de destinos
         try:
+            # Creamos un cursor para ejecutar sentencias SQL
             cur = self.conn.cursor()
 
+            # Sentencia SQL para crear la tabla de destinos
             sql_create_destinations_table = """
                 CREATE TABLE IF NOT EXISTS AgenciaViajes (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -37,48 +40,49 @@ class DatabaseManager:
                     vlr_personaMenor REAL NOT NULL
                 )
                 """
-            cur.execute(sql_create_destinations_table)
+            cur.execute(sql_create_destinations_table) # <- Ejecuta la sentencia SQL para crear la tabla
         except Error as e:
             print(e)
 
-    def insert_data_destinations(self, data):
-        sql = ''' INSERT INTO AgenciaViajes(destino, vlr_personaAdulta, vlr_personaMenor)
-                  VALUES(?,?,?) '''
+    def insert_data_destinations(self, data): # <- Función para insertar datos en la tabla de destinos
         cur = self.conn.cursor()
+        sql = """ INSERT INTO AgenciaViajes(destino, vlr_personaAdulta, vlr_personaMenor)
+                  VALUES(?,?,?) """
         cur.execute(sql, data)
-        self.conn.commit()
+        self.conn.commit() # <- Guarda los cambios en la base de datos
 
-    def update_data_destinations(self, data):
-        sql = ''' UPDATE AgenciaViajes
+    def update_data_destinations(self, data): # <- Función para actualizar los datos de la tabla de destinos
+        cur = self.conn.cursor()
+        sql = """ UPDATE AgenciaViajes
                   SET destino = ? ,
                       vlr_personaAdulta = ? ,
                       vlr_personaMenor = ?
-                  WHERE id = ?'''
-        cur = self.conn.cursor()
+                  WHERE id = ?"""
         cur.execute(sql, data)
         self.conn.commit()
 
     def delete_data_destinations(self, id):
-        sql = 'DELETE FROM AgenciaViajes WHERE id = ?'
         cur = self.conn.cursor()
+        sql = "DELETE FROM AgenciaViajes WHERE id = ?"
         cur.execute(sql, (id,))
         self.conn.commit()
 
-    def select_all_data_destinations(self):
-        df = pd.read_sql_query("SELECT * FROM AgenciaViajes", self.conn)
-        return df
+    def select_all_data_destinations(self): # <- Función para consultar todos los datos de la tabla de destinos
+        # Consulta todos los datos de la tabla de destinos y los guarda en un DataFrame
+        df = pd.read_sql_query("SELECT * FROM AgenciaViajes", self.conn) # <- Ejecuta la consulta SQL através de la conexión a la base de datos
+        return df # <- Retorna el DataFrame con los datos
 
     def select_data_destinations(self, id):
         df = pd.read_sql_query(f"SELECT * FROM AgenciaViajes WHERE id = {id}", self.conn)
         return df
 
     def select_data_destinations_by_name(self, name):
-        df = pd.read_sql_query(f"SELECT * FROM AgenciaViajes WHERE destino = '{name}'", self.conn)
+        df = pd.read_sql_query(f"SELECT * FROM AgenciaViajes WHERE destino = {name}", self.conn)
         return df
 
     # Tabla de clientes #
 
-    def create_table_clients(self):
+    def create_table_clients(self): # <- Función para crear la tabla de clientes
         try:
             cur = self.conn.cursor()
 
@@ -99,28 +103,28 @@ class DatabaseManager:
             print(e)
 
     def insert_persona_data(self, data):
-        sql = ''' INSERT INTO Personas(nombre, apellido, id_viaje, nro_adultos, nro_ninos, subtotal)
-                  VALUES(?, ?, ?, ?, ?, ?) '''
         cur = self.conn.cursor()
+        sql = """ INSERT INTO Personas(nombre, apellido, id_viaje, nro_adultos, nro_ninos, subtotal)
+                  VALUES(?, ?, ?, ?, ?, ?) """
         cur.execute(sql, data)
         self.conn.commit()
 
     def update_persona_data(self, data):
-        sql = ''' UPDATE Personas
+        cur = self.conn.cursor()
+        sql = """ UPDATE Personas
                   SET nombre = ? ,
                       apellido = ? ,
                       id_viaje = ? ,
                       nro_adultos = ? ,
                       nro_ninos = ? ,
                       subtotal = ?
-                  WHERE id = ?'''
-        cur = self.conn.cursor()
+                  WHERE id = ?"""
         cur.execute(sql, data)
         self.conn.commit()
 
     def delete_persona_data(self, id):
-        sql = 'DELETE FROM Personas WHERE id = ?'
         cur = self.conn.cursor()
+        sql = "DELETE FROM Personas WHERE id = ?"
         cur.execute(sql, (id,))
         self.conn.commit()
 
