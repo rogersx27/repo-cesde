@@ -13,7 +13,7 @@ db_manager = DatabaseManager(database)
 destinos = ["Paris", "Roma", "Londres", "Nueva York", "Tokio"]
 
 # Creamos la conexión a la base de datos
-db_manager.create_connection()
+# db_manager.create_connection()
 
 
 # Creamos algunas funciones para generar datos aleatorios de destinos y personas

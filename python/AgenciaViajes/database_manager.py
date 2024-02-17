@@ -77,7 +77,7 @@ class DatabaseManager:
         return df
 
     def select_data_destinations_by_name(self, name):
-        df = pd.read_sql_query(f"SELECT * FROM AgenciaViajes WHERE destino = {name}", self.conn)
+        df = pd.read_sql_query(f"SELECT * FROM AgenciaViajes WHERE destino = '{name}'", self.conn)
         return df
 
     # Tabla de clientes #

@@ -119,7 +119,7 @@ def menu():
                     if menu_admin == 1:
                         all_quotes = db_manager.select_all_personas_data() # <- Consultar todos los datos de la tabla de personas
                         # Crear una lista de listas con los datos obtenidos de all_quotes
-                        table_quotes = [
+                        table_allQuotes = [
                             [
                                 f"{all_quotes['id'].values[i]}", # <- Almacena el ID
                                 all_quotes['nombre'].values[i], # <- Almacena el nombre
