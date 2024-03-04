@@ -65,6 +65,7 @@ def validate_password(password: int) -> bool:
             return True
     except ValueError:
         print("Para confirmar su clave, debe ingresar un número.")
+        return False
 
 
 def get_id_user() -> int:
