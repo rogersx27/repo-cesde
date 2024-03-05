@@ -3,6 +3,8 @@ from sqlite3 import Error
 
 import pandas as pd
 
+from user_class import User
+
 
 class AtmManager:
     """
@@ -59,7 +61,7 @@ class AtmManager:
                     id_user INTEGER PRIMARY KEY,
                     name VARCHAR(50) NOT NULL,
                     last_name VARCHAR(50) NOT NULL,
-                    email VARCHAR(120) NOT NULL,
+                    email VARCHAR(120) NOT NULL UNIQUE,
                     password VARCHAR(50) NOT NULL,
                     balance REAL DEFAULT  0
                 )
@@ -67,6 +69,8 @@ class AtmManager:
             cur.execute(query_users)
         except Error as e:
             print(e)
+
+    # Funciones para manejar los usuarios #
 
     def insert_data_user(self, data) -> None:
             """
@@ -88,26 +92,69 @@ class AtmManager:
                 print("Error al insertar datos en la tabla de usuarios:", e)
                 self.conn.rollback()
 
-    def select_all_data_user(self):
-        df = pd.read_sql_query("SELECT * FROM users", self.conn)
+    def login_user(self, email: str, password: int) -> User or None:
+            """
+            Intenta iniciar sesión con el correo electrónico y la contraseña proporcionados.
+
+            :param email: El correo electrónico del usuario.
+            :param password: La contraseña del usuario.
+            :return: Una instancia de User si el inicio de sesión es exitoso, None en caso contrario.
+            """
+            user_data = self.select_user_by_email(email)
+            
+            if not user_data.empty:
+                first_user_data = user_data.iloc[0]
+                stored_password = first_user_data.get("password")
+                if stored_password == password:
+                    list_data = user_data.values.flatten().tolist()
+                    return User(AtmManager, *list_data)
+                
+            return None
+
+    def select_user_by_email(self, email: str):
+        df = pd.read_sql_query(f"SELECT * FROM users WHERE email = '{email}'", self.conn)
+        return df
+    
+    def select_user_by_id(self, id_user: int):
+        df = pd.read_sql_query("SELECT * FROM users WHERE id_user = ?", self.conn, params=(id_user,))
         return df
 
-    def __update_balance_user__(self, id_user: int, amount: float):
-        if amount > 0:
-            cur = self.conn.cursor()
+    def update_balance_user(self, id_user: int, amount: float):
+            """
+            Actualiza el saldo de un usuario en la base de datos.
 
-            round_amount = round(amount, 1)
+            Parámetros:
+            - id_user (int): ID del usuario.
+            - amount (float): Monto a sumar al saldo del usuario.
 
-            sql = f"""
-            UPDATE users
-            SET balance = balance + {round_amount}
-            WHERE id_user = {id_user} """
+            """
+            if amount > 0:
+                cur = self.conn.cursor()
 
-            cur.execute(sql)
-            self.conn.commit()
-        else:
-            print("El monto debe contener un valor positivo")
+                round_amount = round(amount, 1)
 
+                sql = f"""
+                UPDATE users
+                SET balance = balance + {round_amount}
+                WHERE id_user = {id_user} """
+
+                cur.execute(sql)
+                self.conn.commit()
+            elif amount < 0:
+                cur = self.conn.cursor()
+                
+                round_amount = round(amount, 1)
+                
+                sql = f"""
+                UPDATE users
+                SET balance = balance - {round_amount}
+                WHERE id_user = {id_user} """
+                
+                cur.execute(sql)
+                self.conn.commit()
+            else:
+                print("El monto debe contener un valor válido")
+        
     # Tabla de transacciones #
 
     def create_table_transactions(self):
@@ -120,14 +167,16 @@ class AtmManager:
                 details VARCHAR(250),
                 amount REAL NOT NULL,
                 type_transaction VARCHAR(10) NOT NULL,
-                date DATE NOT NULL,
+                date VARCHAR(120) NOT NULL,
                 FOREIGN KEY (id_user) REFERENCES users(id_user)
             )
         """
 
         cur.execute(query_transactions)
         
-    def __sql_insert_transaction__(self, data: tuple):
+   # Funciones para manejar las transacciones #
+   
+    def _sql_insert_transaction(self, data: tuple):
         """
         Inserta una transacción en la base de datos.
 
@@ -141,7 +190,7 @@ class AtmManager:
         cur.execute(sql, data)
         self.conn.commit()
 
-    def read_data_transactions(self, id_user: int, details: str, amount: float, type_transaction: str, date: str):
+    def read_data_transactions(self, id_user: int, details: str, amount: float, type_transaction: str):
             """
             Lee los datos de una transacción y los procesa según el tipo de transacción.
 
@@ -150,7 +199,6 @@ class AtmManager:
             - details (str): Detalles de la transacción.
             - amount (float): Monto de la transacción.
             - type_transaction (str): Tipo de transacción ('deposit' o 'withdraw').
-            - date (str): Fecha de la transacción.
 
             Lanza:
             - ValueError: Si el tipo de transacción no es 'deposit' o 'withdraw'.
@@ -167,13 +215,15 @@ class AtmManager:
                     if balance < amount:
                         raise ValueError("No tienes suficiente saldo para realizar el retiro")
                     
+                    date = self.get_date()
                     data = (id_user, details, amount, type_transaction, date)
-                    self.__update_balance_user__(id_user, -amount)
-                    self.__sql_insert_transaction__(data)
+                    self._sql_insert_transaction(data)
                         
                 elif type_transaction == 'deposit' and amount > 0:
+                    date = self.get_date()
                     data = (id_user, details, amount, type_transaction, date)
-                    self.__sql_insert_transaction__(data)
+                    self._sql_insert_transaction(data)
+                    return True
                 else:
                     print("El monto debe contener un valor positivo")
                     
@@ -181,11 +231,21 @@ class AtmManager:
                 print("Error al insertar datos en la tabla de transacciones:", e)
                 self.conn.rollback()
 
+    
     def select_all_data_transactions(self):
         df = pd.read_sql_query("SELECT * FROM transactions", self.conn)
         return df
 
-    def select_all_type_transactions(self, type_transaction):
-        df = pd.read_sql_query(
-            f"SELECT * FROM transactions WHERE type_transaction = '{type_transaction}'", self.conn)
+    def select_all_type_transactions_from_user(self, id_user: int, type_transaction: str):
+        df = pd.read_sql_query("SELECT * FROM transactions WHERE id_user = ? AND type_transaction = ?", self.conn, params=(id_user, type_transaction))
         return df
+    
+    def get_date(self):
+        from datetime import datetime
+        date = str(datetime.now().strftime("%Y-%m-%d %H:%M"))
+        return date
+
+        
+if __name__ == "__main__":
+    pass
+    
