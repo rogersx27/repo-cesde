@@ -57,7 +57,7 @@ class User:
         withdraw = 'withdraw'
         save = db_manager.read_data_transactions(id_user=self.id_user, details=text, amount=value, type_transaction=withdraw)
         if save:
-            db_manager.update_balance_user(self.id_user, -value)
+            db_manager.update_balance_user(self.id_user, value, to_withdraw=True)
             new_balance = self.get_data_base_balance()
             self.set_balance(new_balance)
             db_manager.close_connection()

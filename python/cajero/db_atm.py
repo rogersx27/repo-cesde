@@ -119,41 +119,41 @@ class AtmManager:
         df = pd.read_sql_query("SELECT * FROM users WHERE id_user = ?", self.conn, params=(id_user,))
         return df
 
-    def update_balance_user(self, id_user: int, amount: float):
-            """
+    def update_balance_user(self, id_user: int, amount: float, to_withdraw: bool = False):
+        """
             Actualiza el saldo de un usuario en la base de datos.
 
             Parámetros:
             - id_user (int): ID del usuario.
             - amount (float): Monto a sumar al saldo del usuario.
 
-            """
-            if amount > 0:
-                cur = self.conn.cursor()
-
-                round_amount = round(amount, 1)
-
-                sql = f"""
-                UPDATE users
-                SET balance = balance + {round_amount}
-                WHERE id_user = {id_user} """
-
-                cur.execute(sql)
-                self.conn.commit()
-            elif amount < 0:
-                cur = self.conn.cursor()
-                
-                round_amount = round(amount, 1)
-                
-                sql = f"""
+        """
+        if amount == 0:
+            raise ValueError("Debe ingresar un monto diferente de cero")
+        
+        cur = self.conn.cursor()
+        round_amount = round(amount, 1)
+        
+        # ! TODO: Evaluar el balance antes de hacer el retiro para consultar la base de datos real.
+        
+        if to_withdraw:
+            alter_sql = f"""
                 UPDATE users
                 SET balance = balance - {round_amount}
-                WHERE id_user = {id_user} """
+                WHERE id_user = {id_user} 
+                """     
                 
-                cur.execute(sql)
-                self.conn.commit()
-            else:
-                print("El monto debe contener un valor válido")
+            cur.execute(alter_sql)
+            self.conn.commit()   
+
+        sql = f"""
+            UPDATE users
+            SET balance = balance + {round_amount}
+            WHERE id_user = {id_user} 
+            """
+
+        cur.execute(sql)
+        self.conn.commit()
         
     # Tabla de transacciones #
 
@@ -209,10 +209,10 @@ class AtmManager:
                 raise ValueError("El tipo de transacción debe ser 'consignación' o 'retiro'")
 
             try:
-                balance = pd.read_sql_query("SELECT balance FROM users WHERE id_user = ?", self.conn, params=(id_user,))
+                balance = self.select_user_by_id(id_user).get("balance").values[0]
                 if type_transaction == 'withdraw' and amount > 0:
                     
-                    if balance < amount:
+                    if amount > balance:
                         raise ValueError("No tienes suficiente saldo para realizar el retiro")
                     
                     date = self.get_date()
