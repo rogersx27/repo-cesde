@@ -1,5 +1,7 @@
 from os import system, name
+
 from time import sleep
+
 
 def clear():
     """
@@ -9,7 +11,7 @@ def clear():
         ° En caso de ser Linux, se ejecuta el comando "clear" que limpia la pantalla.
     Contiene el método sleep() que se encarga de hacer una pausa de 1 segundo para que el usuario pueda leer el mensaje que se muestra en pantalla.
     """
-    
+
     sleep(1)
     if name == "nt":
         _ = system("cls")
@@ -71,10 +73,10 @@ def validate_password(password: int) -> bool:
 def get_id_user() -> int:
     """
     Solicita al usuario que ingrese su identificación ciudadana.
-    
+
     :raises ValueError: Si el usuario ingresa un valor no numérico.
     :return: int La identificación ciudadana ingresada por el usuario.
-    
+
     """
     while True:
         try:
@@ -90,7 +92,7 @@ def get_id_user() -> int:
 
             else:
                 return id_user
-        except ValueError: # <- Captura la excepción ValueError en caso de que el usuario ingrese un valor no numérico
+        except ValueError:  # <- Captura la excepción ValueError en caso de que el usuario ingrese un valor no numérico
             print("Su identificación debe ser un número.")
             continue
 
@@ -114,10 +116,11 @@ def get_name_or_last(type: str) -> str:
         if len(name) <= 1:
             print(f"Ingrese un {type} válido.")
 
-        elif has_numbers(response): # <- Llama a la función has_numbers
+        elif has_numbers(response):  # <- Llama a la función has_numbers
             print(f"Ingrese un {type} válido.")
 
-        elif has_special_characters(response): # <- Llama a la función has_special_characters 
+        # <- Llama a la función has_special_characters
+        elif has_special_characters(response):
             print(f"Ingrese un {type} válido.")
 
         else:
@@ -156,7 +159,7 @@ def get_email() -> str:
 
 def get_password() -> int:
     """
-    Solicita al usuario que ingrese su clave y la valida.
+    Solicita al usuario que ingrese una clave y la valida.
 
     :raises ValueError: Si el usuario no ingresa un número al confirmar la clave.
     :return: 
@@ -178,7 +181,7 @@ def get_password() -> int:
             if len(str(password)) != 4:
                 print("Su clave debe ser un número de 4 dígitos.")
                 continue
-            
+
             if validate_password(password) == False:
                 print("Las claves no coinciden. Vuelva a intentarlo.")
                 continue
@@ -188,4 +191,3 @@ def get_password() -> int:
         except ValueError:
             print("Su clave debe ser un número.")
             continue
-

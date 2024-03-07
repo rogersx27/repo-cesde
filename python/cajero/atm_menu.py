@@ -3,6 +3,7 @@ from tabulate import tabulate
 from user_class import User
 
 from register_functions import clear, get_id_user, get_name_or_last, get_email, get_password
+from login_functions import get_value, get_detail
 
 
 def register_menu():
@@ -35,6 +36,7 @@ def register_menu():
     
     print("Usuario registrado con éxito. Ya puede iniciar sesión.")
     return True
+
 
 def login_menu():
     from db_atm import AtmManager
@@ -96,34 +98,6 @@ def atm_app():
         return True
 
 
-def get_value(type_t: str):
-    print(f"""
-    Menú de {type_t}
-    ----------------------------
-    Ingrese el valor:
-    """)
-    amount = float(input("||==> "))
-
-    if amount > 0:
-        return amount
-    else:
-        print("El monto ingresado no es válido.")
-        return False
-
-def get_detail(type_t: str):
-    if type_t == "consignación":
-        print("""
-        Ingrese el detalle de la consignación:
-        """)
-    elif type_t == "retiro":
-        print("""
-        Ingrese el detalle del retiro:
-        """)
-        
-    detail = input("||==> ")
-
-    return detail
-
 def account_menu(user: User):
     while True:
         clear()
@@ -157,11 +131,18 @@ def account_menu(user: User):
             print(tabulate(data, headers=["Detalles", "Monto", "Fecha"], tablefmt="pretty"))
             exit_menu = input("Presione enter para continuar...")
         elif menu == 4:
-            pass
+            print("""
+            Ingrese su clave actual:
+            -------------------------      
+            """)
+            actual_password = int(input("||==> "))
+            
+            if actual_password == int(user.password):
+                new_password = get_password()
+                user.change_password(new_password)
         elif menu == 0:
             print("Saliendo de la cuenta...")
             break
-
 
 if __name__ == "__main__":
     cycle = True
