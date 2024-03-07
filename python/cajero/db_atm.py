@@ -252,7 +252,7 @@ class AtmManager:
         df = pd.read_sql_query("SELECT * FROM transactions", self.conn)
         return df
 
-    def reselect_all_type_transactions_from_user(self, id_user: int, type_transaction: str):
+    def select_all_type_transactions_from_user(self, id_user: int, type_transaction: str):
         df = pd.read_sql_query("SELECT * FROM transactions WHERE id_user = ? AND type_transaction = ?",
                                self.conn, params=(id_user, type_transaction))
         return df

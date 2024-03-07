@@ -12,7 +12,7 @@ def register_menu():
     """
     from db_atm import AtmManager
     db_manager = AtmManager()
-    
+
     clear()
     print("""
     Registro de usuario / Presione 0 para volver al menú principal
@@ -29,11 +29,11 @@ def register_menu():
     email = get_email()
 
     password = get_password()
-    
+
     data = (id_user, name, last_name, email, password, 0)
     db_manager.insert_data_user(data)
     db_manager.close_connection()
-    
+
     print("Usuario registrado con éxito. Ya puede iniciar sesión.")
     return True
 
@@ -41,7 +41,7 @@ def register_menu():
 def login_menu():
     from db_atm import AtmManager
     db_manager = AtmManager()
-    
+
     clear()
     print("""
     Iniciar sesión
@@ -56,7 +56,7 @@ def login_menu():
     """)
 
     password = input("||==> ")
-    
+
     user_active = db_manager.login_user(email, password)
     if user_active:
         account_menu(user_active)
@@ -128,7 +128,8 @@ def account_menu(user: User):
             user.do_deposit(amount, detail)
         elif menu == 3:
             data = user.consult_deposits()
-            print(tabulate(data, headers=["Detalles", "Monto", "Fecha"], tablefmt="pretty"))
+            print(tabulate(data, headers=[
+                  "Detalles", "Monto", "Fecha"], tablefmt="pretty"))
             exit_menu = input("Presione enter para continuar...")
         elif menu == 4:
             print("""
@@ -136,13 +137,14 @@ def account_menu(user: User):
             -------------------------      
             """)
             actual_password = int(input("||==> "))
-            
+
             if actual_password == int(user.password):
                 new_password = get_password()
                 user.change_password(new_password)
         elif menu == 0:
             print("Saliendo de la cuenta...")
             break
+
 
 if __name__ == "__main__":
     cycle = True
