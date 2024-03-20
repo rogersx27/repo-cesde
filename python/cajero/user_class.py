@@ -1,4 +1,8 @@
+
 class User:
+    '''
+    Clase usuario
+    '''
     def __init__(self, atm_manager, id_user, name, last_name, email, password, balance=0):
         self.atm_manager = atm_manager
         self.id_user = id_user
@@ -51,11 +55,11 @@ class User:
         from db_atm import AtmManager
         db_manager = AtmManager()
 
-        data = db_manager.select_all_type_transactions_from_user(
-            self.id_user, "deposit")
+        data = db_manager.select_all_transactions_from_user(self.id_user)
 
         table_data = [
             [
+                data['type_transaction'].values[i],
                 data['details'].values[i],
                 data['amount'].values[i],
                 data['date'].values[i]

@@ -231,13 +231,13 @@ class AtmManager:
                     raise ValueError(
                         "No tienes suficiente saldo para realizar el retiro")
 
-                date = self.get_date()
+                date = self.get_date
                 data = (id_user, details, amount, type_transaction, date)
                 self._sql_insert_transaction(data)
                 return True
 
             elif type_transaction == 'deposit' and amount > 0:
-                date = self.get_date()
+                date = self.get_date
                 data = (id_user, details, amount, type_transaction, date)
                 self._sql_insert_transaction(data)
                 return True
@@ -257,6 +257,12 @@ class AtmManager:
                                self.conn, params=(id_user, type_transaction))
         return df
 
+    def select_all_transactions_from_user(self, id_user: int):
+        df = pd.read_sql_query("SELECT * FROM transactions WHERE id_user = ?",
+                               self.conn, params=(id_user,))
+        return df
+
+    @property
     def get_date(self):
         from datetime import datetime
         date = str(datetime.now().strftime("%Y-%m-%d %H:%M"))

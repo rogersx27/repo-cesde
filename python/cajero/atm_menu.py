@@ -129,7 +129,7 @@ def account_menu(user: User):
         elif menu == 3:
             data = user.consult_deposits()
             print(tabulate(data, headers=[
-                  "Detalles", "Monto", "Fecha"], tablefmt="pretty"))
+                  "Tipo de transacción", "Detalles", "Monto", "Fecha"], tablefmt="pretty"))
             exit_menu = input("Presione enter para continuar...")
         elif menu == 4:
             print("""
@@ -147,8 +147,7 @@ def account_menu(user: User):
 
 
 if __name__ == "__main__":
-    cycle = True
-    while cycle == True:
+    while True:
         do_app = atm_app()
-        if do_app == False:
-            cycle = False
+        if not do_app:
+            break
