@@ -1,7 +1,5 @@
 package menu_figuras;
 
-import menu_figuras.GeometricShape;
-
 class Triangle extends GeometricShape {
     private float base;
     private float height;

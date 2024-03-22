@@ -1,14 +1,16 @@
 package menu_figuras;
 
+import java.util.ArrayList;
 import java.util.Scanner;
+
 public class Menu {
 
-    private Scanner scanner;
-    private RegisterInteractions register;
+    private final Scanner scanner;
+    private final RegisterInteractions register;
 
     public Menu() {
-    this.scanner = new Scanner(System.in);
-    this.register = new RegisterInteractions();
+        this.scanner = new Scanner(System.in);
+        this.register = new RegisterInteractions();
     }
 
     public void showMenu() {
@@ -55,62 +57,75 @@ public class Menu {
         } while (option != 0);
     }
 
+    private ArrayList<Object> askData() {
+        InputData inputData = new InputData();
+        ArrayList<Object> data = inputData.getData();
+        return data;
+    }
+
+    private Triangle createTriangle() {
+        ArrayList<Object> data = askData();
+        Triangle triangle = new Triangle(data.get(0).toString(), (float) data.get(1), (float) data.get(2));
+        return triangle;
+    }
+
+    private Square createSquare() {
+        ArrayList<Object> data = askData();
+        Square square = new Square(data.get(0).toString(), (float) data.get(1), (float) data.get(2));
+        return square;
+    }
+
     private void calculateAreaOfTriangle() {
-        System.out.println("Enter the name of the triangle: ");
-        String name = scanner.next();
-        System.out.println("Enter the base of the triangle: ");
-        float base = scanner.nextFloat();
-        System.out.println("Enter the height of the triangle: ");
-        float height = scanner.nextFloat();
-        Triangle triangle = new Triangle(name, base, height);
+        Triangle triangle = createTriangle();
+
+        String name = triangle.getName();
+        float base = triangle.getBase();
+        float height = triangle.getHeight();
+
         register.addRegister(name, base, height, triangle.calculateArea(), 0, 0);
         System.out.println("The area of the triangle " + triangle.getName() + " is: " + triangle.calculateArea());
     }
 
     private void calculatePerimeterOfTriangle() {
-        System.out.println("Enter the name of the triangle: ");
-        String name = scanner.next();
-        System.out.println("Enter the base of the triangle: ");
-        float base = scanner.nextFloat();
-        System.out.println("Enter the height of the triangle: ");
-        float height = scanner.nextFloat();
-        Triangle triangle = new Triangle(name, base, height);
+        Triangle triangle = createTriangle();
+
+        String name = triangle.getName();
+        float base = triangle.getBase();
+        float height = triangle.getHeight();
+
         register.addRegister(name, base, height, 0, triangle.calculatePerimeter(), 0);
         System.out.println("The perimeter of the triangle " + triangle.getName() + " is: " + triangle.calculatePerimeter());
     }
 
     private void calculateHypotenuseOfTriangle() {
-        System.out.println("Enter the name of the triangle: ");
-        String name = scanner.next();
-        System.out.println("Enter the base of the triangle: ");
-        float base = scanner.nextFloat();
-        System.out.println("Enter the height of the triangle: ");
-        float height = scanner.nextFloat();
-        Triangle triangle = new Triangle(name, base, height);
+        Triangle triangle = createTriangle();
+
+        String name = triangle.getName();
+        float base = triangle.getBase();
+        float height = triangle.getHeight();
+
         register.addRegister(name, base, height, 0, 0, triangle.calculateHypotenuse());
         System.out.println("The hypotenuse of the triangle " + triangle.getName() + " is: " + triangle.calculateHypotenuse());
     }
 
     private void calculateAreaOfSquare() {
-        System.out.println("Enter the name of the square: ");
-        String name = scanner.next();
-        System.out.println("Enter the base of the square: ");
-        float base = scanner.nextFloat();
-        System.out.println("Enter the height of the square: ");
-        float height = scanner.nextFloat();
-        Square square = new Square(name, base, height);
+        Square square = createSquare();
+
+        String name = square.getName();
+        float base = square.getBase();
+        float height = square.getHeight();
+
         register.addRegister(name, base, height, square.calculateArea(), 0, 0);
         System.out.println("The area of the square " + square.getName() + " is: " + square.calculateArea());
     }
 
     private void calculatePerimeterOfSquare() {
-        System.out.println("Enter the name of the square: ");
-        String name = scanner.next();
-        System.out.println("Enter the base of the square: ");
-        float base = scanner.nextFloat();
-        System.out.println("Enter the height of the square: ");
-        float height = scanner.nextFloat();
-        Square square = new Square(name, base, height);
+        Square square = createSquare();
+
+        String name = square.getName();
+        float base = square.getBase();
+        float height = square.getHeight();
+
         register.addRegister(name, base, height, 0, square.calculatePerimeter(), 0);
         System.out.println("The perimeter of the square " + square.getName() + " is: " + square.calculatePerimeter());
     }
@@ -118,6 +133,7 @@ public class Menu {
     private void showRegisters() {
         register.showRegisters();
     }
+
     public void closeScanner() {
         scanner.close();
     }
